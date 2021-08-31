@@ -8,20 +8,23 @@ const searchFood =  () => {
     .then(response => response.json())
     .then(data => displaySearchResult(data.meals))
 
-    
 
 }
 
 
 const displaySearchResult = meals => {
     const search_result = document.getElementById('search_result');
+    //search_result.innerHTML = '';
+    search_result.textContent ='';
+
+    
      meals.forEach(meal => {
-           console.log(meal)
 
            const div = document.createElement('div');
            div.classList.add('col');
            div.innerHTML = `
-           <div class="card h-100">
+           <div onclick="mealDetiles('${meal.idMeal}')" class="card h-100">
+
             <img width="100px" src="${meal.strMealThumb}" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">${meal.strMeal}</h5>
@@ -32,3 +35,30 @@ const displaySearchResult = meals => {
             search_result.appendChild(div);
      }) 
 }
+
+const mealDetiles = detiles => {
+         const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${detiles}`
+         fetch(url)
+         .then(res => res.json())
+         .then(data => FinalMealDetiles(data.meals[0]))
+}
+
+const FinalMealDetiles = FinalDetiles   => {
+          console.log(FinalDetiles)
+
+          const mealsa_detlies = document.getElementById('meals-detlies');
+          mealsa_detlies.textContent = '';
+          const div = document.createElement('div');
+          div.classList.add('card');
+          div.innerHTML = `
+          <img height="400px" src="${FinalDetiles.strMealThumb}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">${FinalDetiles.strMeal}</h5>
+            <p class="card-text">${FinalDetiles.strInstructions.slice(0,100)}</p>
+            <a href="${FinalDetiles.strYoutube}" class="btn btn-primary"  target="_blank" >Go On Video</a>
+          </div>
+        </div>  
+          `
+          mealsa_detlies .appendChild(div);
+          
+} 
